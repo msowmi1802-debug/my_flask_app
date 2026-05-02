@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+        background-color: #f3e5f5; /* Light Lavender White mixture */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #4a148c; /* Deep Lavender for text */
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+    .container {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        width: 400px;
+        margin: 50px auto;
+        text-align: center;
+    }
+    input[type="text"] {
+        border: 2px solid #ce93d8;
+        padding: 10px;
+        border-radius: 5px;
+        width: 70%;
+    }
+    button {
+        background-color: #ab47bc;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    footer {
+        margin-top: auto;
+        height: 150px;
+        background-image: url('https://transparenttextures.com'), 
+                          url('https://pixabay.com');
+        background-repeat: repeat-x;
+        background-position: bottom;
+        background-size: contain;
+    }
+</style>
+  
+    <title>My To-Do List</title></head>
+<body>
+    <div class="container">
+        <h2>🌸 {{ current_user.username }}'s Tasks</h2>
+        <!-- ... your form and list ... -->
+    </div>
+    <footer></footer> <!-- This holds the cherry blossom design -->
+</body>
+
+
+    <h2>Welcome, {{ current_user.username }}!</h2>
+    <a href="/logout">Logout</a>
+    <hr>
+    <form action="/add" method="POST">
+        <input type="text" name="content" placeholder="Add a new task" required>
+        <button type="submit">Add</button>
+    </form>
+    <ul>
+        {% for task in tasks %}
+            <li>{{ task.task_content }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
