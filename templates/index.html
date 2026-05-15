@@ -1,71 +1,84 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <style>
-    body {
-        background-color: #f3e5f5; /* Light Lavender White mixture */
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: #4a148c; /* Deep Lavender for text */
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-    }
-    .container {
-        background: white;
-        padding: 2rem;
-        border-radius: 15px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        width: 400px;
-        margin: 50px auto;
-        text-align: center;
-    }
-    input[type="text"] {
-        border: 2px solid #ce93d8;
-        padding: 10px;
-        border-radius: 5px;
-        width: 70%;
-    }
-    button {
-        background-color: #ab47bc;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    footer {
-        margin-top: auto;
-        height: 150px;
-        background-image: url('https://transparenttextures.com'), 
-                          url('https://pixabay.com');
-        background-repeat: repeat-x;
-        background-position: bottom;
-        background-size: contain;
-    }
-</style>
-  
-    <title>My To-Do List</title></head>
+    <title>My To-Do List</title>
+    <style>
+        body {
+            background-color: #f3e5f5; /* Light Lavender White mixture */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #4a148c; /* Deep Lavender for text */
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 400px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        input[type="text"] {
+            border: 2px solid #ce93d8;
+            padding: 10px;
+            border-radius: 5px;
+            width: 70%;
+        }
+        button {
+            background-color: #ab47bc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        ul {
+            padding-left: 0;
+        }
+        footer {
+            margin-top: auto;
+            height: 150px;
+            background-image: url('https://transparenttextures.com/patterns/cubes.png'); 
+            background-repeat: repeat-x;
+            background-position: bottom;
+            background-size: contain;
+        }
+    </style>
+</head>
 <body>
     <div class="container">
         <h2>🌸 {{ current_user.username }}'s Tasks</h2>
-        <!-- ... your form and list ... -->
-    </div>
-    <footer></footer> <!-- This holds the cherry blossom design -->
-</body>
+        <a href="/logout" style="color: #ab47bc; text-decoration: none; font-size: 0.9rem;">Logout</a>
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+        
+        <form action="/add" method="POST">
+            <input type="text" name="content" placeholder="Add a new task" required>
+            <button type="submit">Add</button>
+        </form>
 
-
-    <h2>Welcome, {{ current_user.username }}!</h2>
-    <a href="/logout">Logout</a>
-    <hr>
-    <form action="/add" method="POST">
-        <input type="text" name="content" placeholder="Add a new task" required>
-        <button type="submit">Add</button>
+        <ul>
+            {% for task in tasks %}
+                
+                <li style="list-style: none; margin: 10px 0; text-align: left;">
+    <form action="/toggle/{{ task.id }}" method="POST" style="display: inline;">
+        <input type="checkbox" onchange="this.form.submit()" {% if task.is_completed %}checked{% endif %}>
+        
+        {# We set the class/style logic outside the tag to keep it clean #}
+        {% if task.is_completed %}
+            <span style="text-decoration: line-through; color: #aaa;">{{ task.task_content }}</span>
+        {% else %}
+            <span>{{ task.task_content }}</span>
+        {% endif %}
     </form>
-    <ul>
-        {% for task in tasks %}
-            <li>{{ task.task_content }}</li>
-        {% endfor %}
-    </ul>
-</body>
+</li>
+            {% else %}
+                <li style="list-style: none; color: #888; margin-top: 20px;">No tasks yet!</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <footer></footer> </body>
 </html>
