@@ -1,0 +1,7 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+git config --global user.name "msowmi1802-debug"
+git config --global user.email "msowmi1802@gmail.com"
+*.sqlite
+__pycache__/
+instance/
+.env
