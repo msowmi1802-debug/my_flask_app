@@ -1,17 +1,91 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Register - ToDo App</title>
+    <title>Register - My To-Do List</title>
+    <style>
+        body {
+            background-color: #f3e5f5; /* Light Lavender mixture */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #4a148c; /* Deep Lavender for text */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 350px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 1.5rem;
+        }
+        input[type="text"], input[type="password"] {
+            border: 2px solid #ce93d8;
+            padding: 12px;
+            border-radius: 8px;
+            width: 90%;
+            margin-bottom: 1rem;
+            outline: none;
+        }
+        input:focus {
+            border-color: #ab47bc;
+        }
+        button {
+            background-color: #ab47bc;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #8e24aa;
+        }
+        .login-link {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .login-link a {
+            color: #ab47bc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h2>Create an Account</h2>
-    <form method="POST">
-        <input type="text" name="username" placeholder="Choose a Username" required>
-        <br><br>
-        <input type="password" name="password" placeholder="Choose a Password" required>
-        <br><br>
-        <button type="submit">Register</button>
-    </form>
-    <p>Already have an account? <a href="/login">Login here</a></p>
+    <div class="container">
+        <h2>🌸 Create Account</h2>
+        <form action="/register" method="POST">
+         <p style="font-size: 0.75rem; color: #6a1b9a; text-align: left; margin: 0 20px 10px 20px;">
+    <strong>Rules:</strong> 8+ chars, 1 Uppercase, 1 Number, 1 Special Char (@, #, !).
+</p>
+{# Also, make sure you have the flash message block here to show the rules errors #}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <p style="color: #d32f2f; font-size: 0.8rem;">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}  
+            <input type="text" name="username" placeholder="Choose a Username" required>
+            <input type="password" name="password" placeholder="Choose a Password" required>
+            <button type="submit">Register</button>
+        </form>
+        <p class="login-link">
+            Already have an account? <a href="{{ url_for('login') }}">Login here</a>
+        </p>
+    </div>
 </body>
 </html>

@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 import os
+import re
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -35,14 +36,16 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 # --- ROUTES ---
-@app.route('/')
+@app.route('/tasks')
 @login_required
 def index():
     user_tasks = Todo.query.filter_by(user_id=current_user.id).all()
     return render_template('index.html', tasks=user_tasks)
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def login():
+    
+        
     if request.method == 'POST':
         user = User.query.filter_by(username=request.form.get('username')).first()
         if user and check_password_hash(user.password, request.form.get('password')):
@@ -50,17 +53,47 @@ def login():
             return redirect(url_for('index'))
         flash('Invalid username or password')
     return render_template('login.html')
+import re # Ensure this is at the top of your file
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        hashed_pw = generate_password_hash(request.form.get('password'))
-        new_user = User(username=request.form.get('username'), password=hashed_pw)
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # --- Professional Password Rules ---
+        if len(password) < 8:
+            flash('Password must be at least 8 characters.')
+            return redirect(url_for('register'))
+        
+        if not re.search("[A-Z]", password):
+            flash('Add at least one uppercase letter (A-Z).')
+            return redirect(url_for('register'))
+
+        if not re.search("[0-9]", password):
+            flash('Add at least one number (0-9).')
+            return redirect(url_for('register'))
+
+        # This new line checks for special characters
+        if not re.search("[!@#$%^&*(),.?\":{}|<>]", password):
+            flash('Add at least one special character (e.g., @, #, $, !).')
+            return redirect(url_for('register'))
+
+        # Check if username exists
+        if User.query.filter_by(username=username).first():
+            flash('That username is already taken.')
+            return redirect(url_for('register'))
+
+        # Hash and Save
+        hashed_pw = generate_password_hash(password, method='pbkdf2:sha256')
+        new_user = User(username=username, password=hashed_pw)
         db.session.add(new_user)
         db.session.commit()
+        
+        flash('Registration successful! Please login.')
         return redirect(url_for('login'))
+        
     return render_template('register.html')
-
 @app.route('/add', methods=['POST'])
 @login_required
 def add():
